@@ -9,10 +9,11 @@ const connectionString = `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@${MO
 
 export const initMongoConnection = async () => {
   try {
-    await mongoose.connect(connectionString);
+    await mongoose.connect(connectionString);  
     console.log('Mongo connection successfully established!');
   } catch (error) {
     console.error('Mongo connection failed:', error);
   }
 };
+
 
