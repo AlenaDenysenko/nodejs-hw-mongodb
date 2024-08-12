@@ -1,12 +1,18 @@
-import { Contact } from '../models/contact.js'
+import mongoose from 'mongoose';
+import { Contact } from '../models/contact.js';
 
 const getAllContacts = async () => {
-  return await Contact.find()
+  return await Contact.find();
 }
 
 const getContactById = async (id) => {
-  return await Contact.findById(id)
+ 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error('Invalid ID format');
+  }
+  
+ 
+  return await Contact.findById(mongoose.Types.ObjectId(id));
 }
 
-export { getAllContacts, getContactById }
-
+export { getAllContacts, getContactById };
