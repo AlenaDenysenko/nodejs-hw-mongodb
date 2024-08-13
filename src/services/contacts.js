@@ -6,13 +6,19 @@ const getAllContacts = async () => {
 }
 
 const getContactById = async (id) => {
- 
+  
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Invalid ID format');
   }
+
   
- 
-  return await Contact.findById(mongoose.Types.ObjectId(id));
+  const contact = await Contact.findById(id);
+
+  if (!contact) {
+    throw new Error('Contact not found');
+  }
+
+  return contact;
 }
 
 export { getAllContacts, getContactById };
