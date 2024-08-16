@@ -1,33 +1,31 @@
-import express from 'express'
-import cors from 'cors'
-import pino from 'pino'
-import pinoHttp from 'pino-http'
-import { contactsRouter } from './routes/contacts.js'
+import express from 'express';
+import { initMongoConnection } from './db/initMongoConnection.js';
+import { contactsRouter } from './routers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import dotenv from 'dotenv';
 
-const logger = pino()
-const pinoMiddleware = pinoHttp({ logger })
+dotenv.config();
 
 const setupServer = () => {
-  const app = express()
+  const app = express();
+  app.use(express.json());
 
-  app.use(cors())
-  app.use(pinoMiddleware)
-  app.use(express.json())  
+  initMongoConnection();
 
-  
-  app.use('/contacts', contactsRouter)
+  app.use('/contacts', contactsRouter);
 
- 
-  app.use((req, res) => {
-    res.status(404).json({
-      message: 'Not found',
-    })
-  })
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
-  const PORT = process.env.PORT || 3000
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
-    logger.info(`Server is running on port ${PORT}`)
-  })
-}
+    console.log(`Server running on port ${PORT}`);
+  });
 
-export { setupServer }
+  return app; // Return app for testing purposes, if needed
+};
+
+export { setupServer };
+
+

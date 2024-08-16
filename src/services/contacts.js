@@ -1,24 +1,31 @@
-import mongoose from 'mongoose';
 import { Contact } from '../models/contact.js';
+import mongoose from 'mongoose';
 
-const getAllContacts = async () => {
+export const getAllContacts = async () => {
   return await Contact.find();
-}
+};
 
-const getContactById = async (id) => {
-  
+export const getContactById = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error('Invalid ID format');
   }
+  return await Contact.findById(id);
+};
 
-  
-  const contact = await Contact.findById(id);
+export const createContact = async (contactData) => {
+  return await Contact.create(contactData);
+};
 
-  if (!contact) {
-    throw new Error('Contact not found');
+export const updateContact = async (id, contactData) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error('Invalid ID format');
   }
+  return await Contact.findByIdAndUpdate(id, contactData, { new: true });
+};
 
-  return contact;
-}
-
-export { getAllContacts, getContactById };
+export const deleteContact = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new Error('Invalid ID format');
+  }
+  return await Contact.findByIdAndDelete(id);
+};
