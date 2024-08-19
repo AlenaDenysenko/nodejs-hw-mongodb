@@ -14,7 +14,7 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-export { errorHandler }; // Додаємо цей рядок, щоб експортувати функцію
+export { errorHandler }; 
 
 
 

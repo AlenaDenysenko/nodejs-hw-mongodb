@@ -1,4 +1,3 @@
-// src/middlewares/isValidId.js
 
 const isValidId = (req, res, next) => {
   const { contactId } = req.params;

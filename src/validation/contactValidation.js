@@ -1,4 +1,3 @@
-// src/validation/contactValidation.js
 import { body, validationResult } from 'express-validator';
 
 const contactSchema = [

@@ -6,7 +6,7 @@ import { paginate } from '../pagination/paginationUtils.js';
 export const getContacts = ctrlWrapper(async (req, res) => {
   const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
 
-  // Валідація параметрів запиту
+  
   if (isNaN(page) || isNaN(perPage)) {
     throw createError(400, 'Page and perPage should be numbers');
   }
@@ -32,7 +32,7 @@ export const getContacts = ctrlWrapper(async (req, res) => {
     filters
   );
 
-  // Перевірка наявності контактів
+  
   if (data.length === 0) {
     throw createError(404, 'No contacts found');
   }
@@ -41,7 +41,7 @@ export const getContacts = ctrlWrapper(async (req, res) => {
     status: 200,
     message: 'Successfully found contacts!',
     data: {
-      data, // Масив контактів
+      data, 
       page: currentPage,
       perPage: currentPerPage,
       totalItems,
