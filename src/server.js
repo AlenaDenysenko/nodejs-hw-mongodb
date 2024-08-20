@@ -1,6 +1,7 @@
 import express from 'express';
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { contactsRouter } from './routers/contacts.js';
+import { authRouter } from './routers/auth.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import dotenv from 'dotenv';
@@ -14,6 +15,7 @@ const setupServer = () => {
   initMongoConnection();
 
   app.use('/contacts', contactsRouter);
+  app.use('/auth', authRouter); 
 
   app.use(notFoundHandler); 
 
