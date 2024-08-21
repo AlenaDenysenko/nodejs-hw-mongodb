@@ -6,7 +6,6 @@ import { paginate } from '../pagination/paginationUtils.js';
 export const getContacts = ctrlWrapper(async (req, res) => {
   const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
 
-  
   if (isNaN(page) || isNaN(perPage)) {
     throw createError(400, 'Page and perPage should be numbers');
   }
@@ -31,11 +30,6 @@ export const getContacts = ctrlWrapper(async (req, res) => {
     sortOrder,
     filters
   );
-
-  
-  if (data.length === 0) {
-    throw createError(404, 'No contacts found');
-  }
 
   res.status(200).json({
     status: 200,
@@ -67,6 +61,10 @@ export const createNewContact = ctrlWrapper(async (req, res) => {
 
 export const deleteExistingContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
+  
+  // Додаємо логування для перевірки
+  console.log('Deleting contact with ID:', contactId);
+  
   const deletedContact = await deleteContact(contactId);
   if (!deletedContact) {
     throw createError(404, 'Contact not found');
@@ -79,6 +77,10 @@ export const deleteExistingContact = ctrlWrapper(async (req, res) => {
 
 export const updateExistingContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
+  
+  // Додаємо логування для перевірки
+  console.log('Updating contact with ID:', contactId);
+  
   const contactData = req.body;
   const updatedContact = await updateContact(contactId, contactData);
   if (!updatedContact) {
