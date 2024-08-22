@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser'; // Додайте цей імпорт
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { contactsRouter } from './routers/contacts.js';
 import { authRouter } from './routers/auth.js';
@@ -11,6 +12,7 @@ dotenv.config();
 const setupServer = () => {
   const app = express();
   app.use(express.json());
+  app.use(cookieParser()); 
 
   initMongoConnection();
 
@@ -31,7 +33,6 @@ const setupServer = () => {
 
 export { setupServer };
 
-  
   
 
 
