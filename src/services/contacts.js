@@ -4,19 +4,19 @@ export const getAllContacts = async (filters = {}) => {
   return await Contact.find(filters);
 };
 
-export const getContactById = async (id) => {
-  return await Contact.findById(id);
+export const getContactById = async (id, userId) => {
+  return await Contact.findOne({ _id: id, userId });
 };
 
 export const createContact = async (contactData) => {
   return await Contact.create(contactData);
 };
 
-export const updateContact = async (id, contactData) => {
-  return await Contact.findByIdAndUpdate(id, contactData, { new: true });
+export const updateContact = async (id, userId, contactData) => {
+  return await Contact.findOneAndUpdate({ _id: id, userId }, contactData, { new: true });
 };
 
-export const deleteContact = async (id) => {
-  return await Contact.findByIdAndDelete(id);
+export const deleteContact = async (id, userId) => {
+  return await Contact.findOneAndDelete({ _id: id, userId });
 };
 
