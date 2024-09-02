@@ -11,13 +11,13 @@ import { paginate } from '../pagination/paginationUtils.js';
 
 export const getContacts = ctrlWrapper(async (req, res) => {
   const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
-  const { _id: userId } = req.user; 
+  const { _id: userId } = req.user;
 
   if (isNaN(page) || isNaN(perPage)) {
     throw createError(400, 'Page and perPage should be numbers');
   }
 
-  const filters = { userId }; 
+  const filters = { userId };
   if (type) filters.contactType = type;
   if (isFavourite !== undefined) filters.isFavourite = isFavourite === 'true';
 
@@ -58,8 +58,12 @@ export const getContacts = ctrlWrapper(async (req, res) => {
 });
 
 export const createNewContact = ctrlWrapper(async (req, res) => {
-  const { _id: userId } = req.user; 
-  const contactData = { ...req.body, userId }; 
+  const { _id: userId } = req.user;
+  const contactData = { ...req.body, userId };
+
+  if (req.file) {
+    contactData.photo = req.file.path;
+  }
 
   if (!contactData.name) {
     throw createError(400, 'Name is required');
@@ -75,9 +79,9 @@ export const createNewContact = ctrlWrapper(async (req, res) => {
 
 export const deleteExistingContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
-  const { _id: userId } = req.user; 
+  const { _id: userId } = req.user;
 
-  const deletedContact = await deleteContact(contactId, userId); 
+  const deletedContact = await deleteContact(contactId, userId);
   if (!deletedContact) {
     throw createError(404, 'Contact not found');
   }
@@ -90,10 +94,14 @@ export const deleteExistingContact = ctrlWrapper(async (req, res) => {
 
 export const updateExistingContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
-  const { _id: userId } = req.user; 
+  const { _id: userId } = req.user;
   const contactData = req.body;
 
-  const updatedContact = await updateContact(contactId, contactData, userId); 
+  if (req.file) {
+    contactData.photo = req.file.path; 
+  }
+
+  const updatedContact = await updateContact(contactId, contactData, userId);
   if (!updatedContact) {
     throw createError(404, 'Contact not found');
   }
@@ -107,9 +115,9 @@ export const updateExistingContact = ctrlWrapper(async (req, res) => {
 
 export const getContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
-  const { _id: userId } = req.user; 
+  const { _id: userId } = req.user;
 
-  const contact = await getContactById(contactId, userId); 
+  const contact = await getContactById(contactId, userId);
   if (!contact) {
     throw createError(404, 'Contact not found');
   }

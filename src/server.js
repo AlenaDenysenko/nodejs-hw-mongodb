@@ -1,5 +1,5 @@
 import express from 'express';
-import cookieParser from 'cookie-parser'; // Додайте цей імпорт
+import cookieParser from 'cookie-parser'; 
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { contactsRouter } from './routers/contacts.js';
 import { authRouter } from './routers/auth.js';
@@ -32,6 +32,8 @@ const setupServer = () => {
 };
 
 export { setupServer };
+  
+
 
   
 

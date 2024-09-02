@@ -4,6 +4,7 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { sendEmail } from '../config/email.js';
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -140,7 +141,66 @@ const logout = async (req, res) => {
   res.status(204).send();
 };
 
+const sendResetEmail = async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return next(createHttpError(404, 'User not found!'));
+  }
+
+  const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '5m' });
+
+  const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`;
+
+  try {
+    await sendEmail(email, 'Reset Password', `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`);
+    res.status(200).json({
+      status: 200,
+      message: 'Reset password email has been successfully sent.',
+      data: {},
+    });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return next(createHttpError(500, 'Failed to send the email, please try again later.'));
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  const { token, password } = req.body;
+
+  let payload;
+  try {
+    payload = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return next(createHttpError(401, 'Token is expired or invalid.'));
+  }
+
+  const user = await User.findOne({ email: payload.email });
+  if (!user) {
+    return next(createHttpError(404, 'User not found!'));
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  user.password = hashedPassword;
+  await user.save();
+
+  await Session.deleteMany({ userId: user._id });
+
+  res.status(200).json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
+  });
+};
+
 export const wrappedRegister = ctrlWrapper(register);
 export const wrappedLogin = ctrlWrapper(login);
 export const wrappedRefresh = ctrlWrapper(refresh);
 export const wrappedLogout = ctrlWrapper(logout);
+export const wrappedSendResetEmail = ctrlWrapper(sendResetEmail);
+export const wrappedResetPassword = ctrlWrapper(resetPassword);
+
+
+

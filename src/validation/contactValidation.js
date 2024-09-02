@@ -6,6 +6,7 @@ const contactSchema = [
   body('phoneNumber').isString().isLength({ min: 3, max: 20 }).withMessage('Phone number must be between 3 and 20 characters'),
   body('isFavourite').optional().isBoolean().withMessage('isFavourite must be a boolean'),
   body('contactType').isString().isIn(['work', 'home', 'personal']).withMessage('Invalid contact type'),
+  body('photo').optional().isURL().withMessage('Invalid photo URL format'),
 ];
 
 const validateBody = (schema) => {
@@ -24,6 +25,7 @@ const validateBody = (schema) => {
 };
 
 export { validateBody, contactSchema };
+
 
 
 
