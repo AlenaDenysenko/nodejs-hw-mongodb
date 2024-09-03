@@ -11,7 +11,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'contacts_photos', // Назва папки у Cloudinary, куди будуть зберігатися зображення
+    folder: 'contacts_photos', 
     allowed_formats: ['jpg', 'jpeg', 'png'],
   },
 });

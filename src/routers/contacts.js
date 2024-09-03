@@ -1,30 +1,24 @@
 import express from 'express';
-import {
-  getContacts,
-  getContact,
-  createNewContact,
-  updateExistingContact,
-  deleteExistingContact,
+import { 
+  getContacts, 
+  createNewContact, 
+  getContact, 
+  deleteExistingContact, 
+  updateExistingContact 
 } from '../controllers/contacts.js';
-import isValidId from '../middlewares/isValidId.js';
-import { validateBody, contactSchema } from '../validation/contactValidation.js';
-import authenticate from '../middlewares/authenticate.js';
-import { upload } from '../config/cloudinary.js'; 
+import { upload } from '../config/cloudinary.js';
+import authenticate from '../middlewares/authenticate.js'; 
 
 const router = express.Router();
 
-router.use(authenticate);
-
-router.get('/', getContacts);
-router.get('/:contactId', isValidId, getContact);
-
-router.post('/', upload.single('photo'), validateBody(contactSchema), createNewContact);
-
-router.patch('/:contactId', isValidId, upload.single('photo'), validateBody(contactSchema), updateExistingContact);
-
-router.delete('/:contactId', isValidId, deleteExistingContact);
+router.get('/', authenticate, getContacts);
+router.post('/', authenticate, upload.single('photo'), createNewContact); 
+router.get('/:contactId', authenticate, getContact); 
+router.delete('/:contactId', authenticate, deleteExistingContact); 
+router.patch('/:contactId', authenticate, upload.single('photo'), updateExistingContact); 
 
 export { router as contactsRouter };
+
 
 
 

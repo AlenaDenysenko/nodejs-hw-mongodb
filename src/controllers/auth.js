@@ -144,8 +144,11 @@ const logout = async (req, res) => {
 const sendResetEmail = async (req, res, next) => {
   const { email } = req.body;
 
+  console.log('Received request to send reset email for:', email);
+
   const user = await User.findOne({ email });
   if (!user) {
+    console.log('User not found:', email);
     return next(createHttpError(404, 'User not found!'));
   }
 
@@ -153,8 +156,11 @@ const sendResetEmail = async (req, res, next) => {
 
   const resetLink = `${process.env.APP_DOMAIN}/reset-password?token=${resetToken}`;
 
+  console.log('Generated reset link:', resetLink);
+
   try {
-    await sendEmail(email, 'Reset Password', `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`);
+    await sendEmail(email, 'Reset Password', `<p>Click <a href="${resetLink}">here</a> to reset your password</a></p>`);
+    console.log('Email sent successfully to:', email);
     res.status(200).json({
       status: 200,
       message: 'Reset password email has been successfully sent.',

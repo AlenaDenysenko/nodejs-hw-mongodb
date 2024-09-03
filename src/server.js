@@ -1,5 +1,8 @@
 import express from 'express';
-import cookieParser from 'cookie-parser'; 
+import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express'; 
+import fs from 'fs';
+import path from 'path';
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { contactsRouter } from './routers/contacts.js';
 import { authRouter } from './routers/auth.js';
@@ -9,19 +12,24 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const swaggerPath = path.resolve('docs/swagger.json');
+const swaggerDocument = JSON.parse(fs.readFileSync(swaggerPath, 'utf-8'));
+
 const setupServer = () => {
   const app = express();
   app.use(express.json());
-  app.use(cookieParser()); 
+  app.use(cookieParser());
 
   initMongoConnection();
 
   app.use('/contacts', contactsRouter);
-  app.use('/auth', authRouter); 
+  app.use('/auth', authRouter);
 
-  app.use(notFoundHandler); 
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-  app.use(errorHandler); 
+  app.use(notFoundHandler);
+
+  app.use(errorHandler);
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => {
@@ -32,6 +40,7 @@ const setupServer = () => {
 };
 
 export { setupServer };
+
   
 
 

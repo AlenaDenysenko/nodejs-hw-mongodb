@@ -1,0 +1,11 @@
+post:
+  tags:
+    - Auth
+  summary: Log out a user
+  operationId: logoutUser
+  description: Log out the authenticated user and invalidate their session.
+  responses:
+    204:
+      description: User successfully logged out.
+    401:
+      description: Refresh token not provided or invalid.

@@ -1,0 +1,41 @@
+post:
+  tags:
+    - Auth
+  summary: Log in a user
+  operationId: loginUser
+  description: Authenticate a user and return an access token.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+            password:
+              type: string
+          required:
+            - email
+            - password
+  responses:
+    200:
+      description: User successfully logged in.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+    401:
+      description: Invalid email or password.
+    400:
+      description: Validation error.

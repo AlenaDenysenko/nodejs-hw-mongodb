@@ -1,0 +1,25 @@
+post:
+  tags:
+    - Auth
+  summary: Refresh a session
+  operationId: refreshToken
+  description: Refresh an existing session using a refresh token.
+  responses:
+    200:
+      description: Session successfully refreshed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+              message:
+                type: string
+              data:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+    401:
+      description: Refresh token not provided or invalid.
