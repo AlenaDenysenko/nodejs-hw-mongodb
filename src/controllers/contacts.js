@@ -11,7 +11,7 @@ import { paginate } from '../pagination/paginationUtils.js';
 
 export const getContacts = ctrlWrapper(async (req, res) => {
   const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
-  const { _id: userId } = req.user;
+ const { _id: userId } = req.user;
 
   if (isNaN(page) || isNaN(perPage)) {
     throw createError(400, 'Page and perPage should be numbers');
@@ -79,7 +79,7 @@ export const createNewContact = ctrlWrapper(async (req, res) => {
 
 export const deleteExistingContact = ctrlWrapper(async (req, res) => {
   const { contactId } = req.params;
-  const { _id: userId } = req.user;
+const { _id: userId } = req.user;
 
   const deletedContact = await deleteContact(contactId, userId);
   if (!deletedContact) {
